@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Salidas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/>
+</head>
+<body>
+    <div class="container">
+        <strong>
+            <a th:href="@{/entradas}" class=" align-items-center mb-e mb-mb-0 me-mb-auto text-dark text-decoration-none">
+                <img src="http://misiontic2022.mintic.gov.co/mt2022/assets/assets/images/logo-mision.png" height="32"/>
+                <span class="fs-4">EasyParking</span>
+            </a>
+        </strong>
+        </div>
+    <header class="container">
+        <nav class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <ul class="nav nav-pills">
+                <li class="nav nav-item"><a th:href="@{/entradas}" class="nav-link">Inicio</a></li>
+                <li class="nav nav-item"><a class="nav-link active">Salidas</a></li>
+                <li class="nav nav-item"><a th:href="@{/facturas}" class="nav-link">Facturas</a></li>
+                <li class="nav nav-item"><a th:href="@{/usuarios}" class="nav-link">Usuarios</a></li>
+                <li class="nav nav-item"><a th:href="@{/personas}" class="nav-link">Personas</a></li>
+                <li class="nav nav-item"><a th:href="@{/plazas}" class="nav-link">Plazas</a></li>
+                <li class="nav nav-item"><a th:href="@{/configuracion}" class="nav-link">Configuración</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="container">
+        <form class="row g-3" method="post" th:action="@{/salidas/darSalida/}" th:object="${factura}">
+            <input type="hidden" name="id_facturas" th:field="*{id_facturas}"/>
+            <div class="col-md-6">
+                <label for="placa" class="form-label">Placa:</label>
+                <input type="text" class="form-control" name="placa" th:field="*{placa}" disabled/>
+            </div>
+            <div class="col-md-6">
+                <label for="tipo" class="form-label">Tipo:</label>
+                <input type="text" class="form-control" name="tipo" th:field="*{plaza.tipoplaza}" disabled/>
+            </div>
+            <div class="col-md-6" th:if="${factura.codigofactura != null and !factura.codigofactura.empty}">
+                <label for="codigofactura" class="form-label">Código:</label>
+                <input type="text" class="form-control" name="codigofactura" th:field="*{codigofactura}" disabled/>
+            </div>
+            <div class="col-md-6" th:if="${factura.fechafactura != null and !factura.fechafactura.empty}">
+                <label for="fechafactura" class="form-label">Fecha:</label>
+                <input type="text" class="form-control" name="fechafactura" th:field="*{fechafactura}" disabled/>
+            </div>
+            <div class="col-md-6">
+                <label for="fechaentrada" class="form-label">Entrada:</label>
+                <input type="text" class="form-control" name="fechaentrada" th:field="*{fechaentrada}" disabled/>
+            </div>
+            <div class="col-md-6" th:if="${factura.fechasalida != null and !factura.fechasalida.empty}">
+                <label for="fechaSalida" class="form-label">Salida:</label>
+                <input type="text" class="form-control" name="fechaSalida" th:field="*{fechasalida}" disabled/>
+            </div>
+            <div class="col-md-6" th:if="${factura.valor != null and !factura.valor.empty}">
+                <label for="valor" class="form-label">Valor:</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" name="valor" th:field="*{valor}" disabled/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="id_plaza" class="form-label">Plaza:</label>
+                <input type="text" class="form-control" name="id_plazas" th:field="*{plaza}" disabled/>
+            </div>
+            <div class="mt-8">
+                <button type="submit" name="salir" value="salir" class="btn btn-danger float-end">Dar Salida</button>
+            </div>
+        </form>
+        <div th:if="${facturas != null and !facturas.empty}">
+            <span class="fw-bold w-auto">Vehículos en el Parqueadero</sapn>
+            <table class="table table-striped table-bordered mt-4">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Placa</th>
+                        <th scope="col">Hora de entrada</th>
+                        <th scope="col">Plaza</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table">
+                    <tr th:each="fac: ${facturas}">
+                        <th th:text="${fac.placa}"></th>
+                        <th th:text="${fac.fechaentrada}"></th>
+                        <th th:text="${fac.plaza.codigoplaza}"></th>
+                        <th>
+                            <a type="submit" th:href="@{/salidas/ver/} + ${fac.id_facturas}" class="btn btn-primary">Ver</a>
+                            <a type="submit" th:href="@{/salidas/darSalida/} + ${fac.id_facturas}" class="btn btn-danger">Dar Salida</a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${facturas == null or facturas.empty}">La lista esta vacia</div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous"/>
+</head>
+<body>
+    <div class="container">
+    <strong>
+        <a th:href="@{/entradas}" class=" align-items-center mb-e mb-mb-0 me-mb-auto text-dark text-decoration-none">
+            <img src="http://misiontic2022.mintic.gov.co/mt2022/assets/assets/images/logo-mision.png" height="32"/>
+            <span class="fs-4">EasyParking</span>
+        </a>
+    </strong>
+    </div>
+    <header class="container">
+        <nav class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <ul class="nav nav-pills">
+                <li class="nav nav-item"><a th:href="@{/entradas}" class="nav-link">Inicio</a></li>
+                <li class="nav nav-item"><a th:href="@{/salidas}" class="nav-link">Salidas</a></li>
+                <li class="nav nav-item"><a th:href="@{/facturas}" class="nav-link">Facturas</a></li>
+                <li class="nav nav-item"><a class="nav-link active">Usuarios</a></li>
+                <li class="nav nav-item"><a th:href="@{/personas}" class="nav-link">Personas</a></li>
+                <li class="nav nav-item"><a th:href="@{/plazas}" class="nav-link">Plazas</a></li>
+                <li class="nav nav-item"><a th:href="@{/configuracion}" class="nav-link">Configuración</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="container">
+        <span class="fw-bold w-auto" th:text="${titulo}"></span>
+        <div class="row">
+            <form class="row g-3" method="post" th:action="@{/usuarios/guardar}" th:object="${usuario}">
+                <input type="hidden" name="id_usuarios" th:field="*{id_usuarios}"/>
+                <div class="col-md-6">
+                    <label for="usuario" class="form-label">Usuario:</label>
+                    <input type="text" class="form-control" name="usuario" th:field="*{usuario}"/>
+                </div>
+                <div class="col-md-6">
+                    <label for="clave" class="form-label">Clave:</label>
+                    <input type="text" class="form-control" name="clave" th:field="*{clave}"/>
+                </div>
+                <div class="col-md-6">
+                    <label for="id_personas" class="form-label">Personas asignada:</label>
+                    <Select class="form-select" name="id_personas" th:field="*{persona}">
+                        <option value="0" >Seleccione...</option>
+                        <option th:each="persona: ${personas}" th:value="${persona.id_personas}" th:text="${persona.numdoc}+' - '+${persona.nombres}+' '+${persona.apellidos}" />
+                    </Select>
+                    <!-- <input placeholder="Seleccione..." value="1" type="search" name="id_personas" th:field="*{id_personas}"  list="lista" class="form-select"/>
+                    <datalist id="lista">
+                        <option th:each="persona: ${personas}" th:value="${persona.id_personas}" th:text="${persona.numdoc}+' - '+${persona.nombres}+' '+${persona.apellidos}"/>
+                    </datalist> -->
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-6">
+                        <label for="rol" class="form-label">rol:</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="rol" value="recepcionista" th:field="*{rol}"/>
+                        <label class="form-check-label">Recepcionista</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="rol" value="administrador" th:field="*{rol}"/>
+                        <label class="form-check-label">Administrador</label>
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <button type="submit" name="guardar" value="Guardar" class="btn btn-primary float-end">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div th:if="${usuarios != null and !usuarios.empty}">
+            <span class="fw-bold w-auto">Lista de Usuarios</sapn>
+            <table class="table table-striped table-bordered mt-4">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">Usuarios</th>
+                        <th scope="col">Clave</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Persona Asociada</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table">
+                    <tr th:each="usr: ${usuarios}">
+                        <th th:text="${usr.usuario}"></th>
+                        <th th:text="${usr.clave}"></th>
+                        <th th:text="${usr.rol}"></th>
+                        <th th:text="${usr.persona.numdoc} + ' - ' + ${usr.persona.nombres} + ' ' + ${usr.persona.apellidos}"></th>
+                        <th>
+                            <a type="submit" th:href="@{/usuarios/editar/} + ${usr.id_usuarios}" class="btn btn-primary" >Editar</a>
+                            <a type="submit" th:href="@{/usuarios/eliminar/} + ${usr.id_usuarios}" class="btn btn-danger" >Eliminar</a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${usuarios == null or usuarios.empty}">La lista esta vacia</div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>
